@@ -524,10 +524,14 @@ func (r *redisAdapter) onResponse(channel string, msg []byte) {
 			request.MsgCount.Add(1)
 
 			// ignore if response does not contain 'sockets' key
-			if response.Sockets == nil {
-				return
-			}
+			//if response.Sockets == nil {
+			//	return
+			//}
 			request.Sockets.Push(response.Sockets...)
+
+			if len(response.Sockets) > 0 {
+				request.Sockets.Push(response.Sockets...)
+			}
 
 			if request.MsgCount.Load() == request.NumSub {
 				utils.ClearTimeout(request.Timeout.Load())
